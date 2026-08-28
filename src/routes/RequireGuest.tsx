@@ -5,7 +5,7 @@ export function RequireGuest() {
   const status = useAuthStore(state => state.status);
 
   if (status === 'loading') {
-    return <Navigate to="/organizations" replace />;
+    return <span>Loading</span>;
   }
 
   if (status === 'authenticated') {
