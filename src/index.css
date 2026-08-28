@@ -1,0 +1,24 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: Inter, Roboto, Helvetica, Arial, sans-serif;
+
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #71717b;
+
+  --color-black-default: #09090b;
+
+  --color-border-default: #27272a;
+
+  --color-btn-primary: #155dfc;
+  --color-btn-danger: #e7000b;
+}
+
+@layer base {
+  body {
+    @apply antialiased;
+    line-height: 1.4;
+    color: var(--color-text-primary);
+    background-color: var(--color-black-default);
+  }
+}
