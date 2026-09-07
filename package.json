@@ -4,7 +4,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://giovannikuntadi.github.io/lms-dashboard",
+  "homepage": "https://github.com/giovannikuntadi/lms-dashboard",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
