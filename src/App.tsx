@@ -1,4 +1,4 @@
-import { HashRouter, Navigate, Outlet, Route, Routes } from 'react-router';
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router';
 import { RequireGuest } from './routes/RequireGuest';
 import { RequireAuth } from './routes/RequireAuth';
 import { Login } from './pages/AuthPage/Login';
@@ -22,7 +22,7 @@ export function App() {
   }
 
   return (
-    <HashRouter>
+    <BrowserRouter basename="/lms-dashboard">
       <Routes>
         <Route element={<RequireGuest />}>
           <Route path="/login" element={<Login />} />
@@ -49,6 +49,6 @@ export function App() {
           </Route>
         </Route>
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
