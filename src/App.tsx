@@ -11,14 +11,21 @@ import { Mentors } from './pages/MentorsPage';
 import { Organizations } from './pages/OrganizationsPage';
 import { Courses } from './pages/CoursesPage';
 import { Settings } from './pages/SettingsPage';
-import { BASENAME } from './constants/baseUrl';
+import { useAuthStore } from './store/authStore';
+import { GlobalLoadingScreen } from './components/GlobalLoadingScreen';
 
 export function App() {
+  const status = useAuthStore(state => state.status);
+
+  if (status === 'loading') {
+    return <GlobalLoadingScreen />;
+  }
+
   return (
     <>
       <Routes>
         <Route element={<RequireGuest />}>
-          <Route path={`${BASENAME}/login`} element={<Login />} />
+          <Route path="/login" element={<Login />} />
         </Route>
 
         <Route element={<RequireAuth />}>
@@ -29,15 +36,16 @@ export function App() {
               </AppLayout>
             }
           >
-            <Route path={`${BASENAME}/`} element={<Navigate to={`${BASENAME}/students`} replace />} />
-            <Route path={`${BASENAME}/students`} element={<Students />} />
-            <Route path={`${BASENAME}/schedule`} element={<Schedule />} />
-            <Route path={`${BASENAME}/courses`} element={<Courses />} />
-            <Route path={`${BASENAME}/live-sessions`} element={<LiveSessions />} />
-            <Route path={`${BASENAME}/assignments`} element={<Assignments />} />
-            <Route path={`${BASENAME}/mentors`} element={<Mentors />} />
-            <Route path={`${BASENAME}/organizations`} element={<Organizations />} />
-            <Route path={`${BASENAME}/settings`} element={<Settings />} />
+            <Route path="/" element={<Navigate to="/students/enrolled" replace />} />
+            <Route path="/students/enrolled" element={<Students />} />
+            <Route path="/students/pending" element={<Students />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/live-sessions" element={<LiveSessions />} />
+            <Route path="/assignments" element={<Assignments />} />
+            <Route path="/mentors" element={<Mentors />} />
+            <Route path="/organizations" element={<Organizations />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
         </Route>
       </Routes>

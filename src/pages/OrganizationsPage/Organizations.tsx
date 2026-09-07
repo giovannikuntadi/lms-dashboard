@@ -38,7 +38,7 @@ export function Organizations() {
     error,
   } = useQuery({
     queryKey: ['organizations', { limit, offset, search: debouncedSearch }],
-    queryFn: () => HttpService.listOrganizations({ limit, offset, search: debouncedSearch }),
+    queryFn: () => HttpService.listOrganizations({ limit: limit, offset: offset, search: debouncedSearch }),
   });
 
   const columns = useMemo(() => {

@@ -10,13 +10,13 @@ interface Total {
 type ResponseData = Organization[] | undefined;
 type ResponseMeta = Total | undefined;
 
-interface ListOrganization {
-  limit?: number;
-  offset?: number;
+interface ListOrganizationProps {
+  limit: number;
+  offset: number;
   search?: string;
 }
 
-export async function listOrganizations({ limit = 10, offset = 0, search }: ListOrganization) {
+export async function listOrganizations({ limit, offset, search }: ListOrganizationProps) {
   const url = new URL(`${HOST}/v1/organizations`);
   url.searchParams.set('limit', String(limit));
   url.searchParams.set('offset', String(offset));

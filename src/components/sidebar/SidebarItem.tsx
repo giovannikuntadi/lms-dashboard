@@ -4,19 +4,21 @@ import { NavLink, useMatch } from 'react-router';
 type IconProps = { stroke?: string };
 
 interface SidebarItemProps {
-  to: string;
+  to: string | (() => string);
   icon: ComponentType<IconProps>;
   label: string;
   isCollapse: boolean;
 }
 
 export function SidebarItem({ to, icon: Icon, label, isCollapse }: SidebarItemProps) {
-  const match = useMatch(to);
+  const resolvedPath = typeof to === 'function' ? to() : to;
+  const matchPath = `${resolvedPath.split('/').slice(0, 2).join('/')}/*`;
+  const match = useMatch(matchPath);
   const isActive = Boolean(match);
 
   return (
     <NavLink
-      to={to}
+      to={resolvedPath}
       className={`group flex items-center gap-2 rounded-lg p-2 ${isActive ? 'text-btn-primary bg-[#18181B]' : ''}`}
     >
       <span>

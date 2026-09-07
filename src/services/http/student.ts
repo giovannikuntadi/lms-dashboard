@@ -9,14 +9,14 @@ interface Total {
 type ResponseData = Student[] | undefined;
 type ResponseMeta = Total | undefined;
 
-interface ListStudent {
+interface ListStudentProps {
   organizationId?: number;
   limit: number;
   offset: number;
   search?: string;
 }
 
-export async function listStudents({ limit = 10, offset = 0, organizationId, search }: ListStudent) {
+export async function listStudents({ limit, offset, organizationId, search }: ListStudentProps) {
   const url = new URL(`${HOST}/v1/students`);
   url.searchParams.set('limit', String(limit));
   url.searchParams.set('offset', String(offset));

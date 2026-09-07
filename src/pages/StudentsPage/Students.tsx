@@ -12,9 +12,14 @@ import { DataTableToolbar } from '@/components/table/DataTableToolbar';
 import { SearchInput } from '@/components/SearchInput';
 import { Select } from '@/components/Select';
 import { DataTable } from '@/components/table/DataTable';
-import { studentColumns } from './components/studentColumns';
+import { getStudentColumns } from './components/getStudentColumns';
 import { DataTablePagination } from '@/components/table/DataTablePagination';
 import { Dialog } from '@/components/Dialog';
+import type { Student } from '@/types/student';
+import type { SegmentedControlItem } from '@/components/SegmentedControl';
+import { StudentStatus } from './components/StudentStatus';
+import { SegmentedControl } from '@/components/SegmentedControl';
+import { useNavigate } from 'react-router';
 
 export function Students() {
   const [limit, setLimit] = useState(tableParam.DEFAULT_LIMIT);
@@ -23,6 +28,11 @@ export function Students() {
   const [selectedPage, setSelectedPage] = useState(tableParam.DEFAULT_SELECTED_PAGE);
   const [search, setSearch] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [studentToView, setStudentToView] = useState<Student | null>(null);
+  const [studentToUpdate, setStudentToUpdate] = useState<Student | null>(null);
+  // const [selectedStatus, setSelectedStatus] = useState(StudentStatus.ENROLLED);
+
+  const navigate = useNavigate();
 
   const debouncedSearch = useDebouncedValue(search, 300);
 
@@ -33,12 +43,29 @@ export function Students() {
     error,
   } = useQuery({
     queryKey: ['students', { limit, offset, organizationId, search: debouncedSearch }],
-    queryFn: () => HttpService.listStudents({ limit, offset, organizationId, search: debouncedSearch }),
+    queryFn: () => HttpService.listStudents({ limit: limit, offset: offset, organizationId, search: debouncedSearch }),
   });
+
+  const STUDENT_STATUS = useMemo(() => {
+    return [
+      { value: StudentStatus.ENROLLED, label: 'Enrolled', to: '/students/enrolled' },
+      { value: StudentStatus.PENDING, label: 'Pending', to: '/students/pending' },
+    ];
+  }, []);
+
+  // const selectedSegment = useMemo(() => {
+  //   const location = window.location.pathname;
+
+  //   STUDENT_STATUS.map(status => status.value === selectedStatus);
+  // }, []);
+
+  const column = useMemo(() => {
+    return getStudentColumns({ onView: setStudentToView, onUpdate: setStudentToUpdate });
+  }, [setStudentToView, setStudentToUpdate]);
 
   const { data: organizations } = useQuery({
     queryKey: ['organizations'],
-    queryFn: () => HttpService.listOrganizations({ limit: 100 }),
+    queryFn: () => HttpService.listOrganizations({ limit: 100, offset }),
   });
 
   const totalPages: number = useMemo(() => {
@@ -69,6 +96,13 @@ export function Students() {
       })) ?? []),
     ];
   }, [organizations]);
+
+  const handleClickSegment = useCallback(
+    (item: SegmentedControlItem) => {
+      navigate(item.to);
+    },
+    [navigate],
+  );
 
   const handleChangeOnSearchInput = useCallback((value: string) => {
     setSearch(value);
@@ -116,6 +150,7 @@ export function Students() {
           </Dialog>
         }
       />
+      <SegmentedControl items={STUDENT_STATUS} onClick={handleClickSegment} />
       <DataTableToolbar dataTitle="Students" dataCount={students?.responseMeta?.total}>
         <SearchInput value={search} placeholder="Search by name or email" onChange={handleChangeOnSearchInput} />
         <Select
@@ -125,7 +160,16 @@ export function Students() {
           options={organizationOptions}
         />
       </DataTableToolbar>
-      {isLoading ? <span>Loading</span> : <DataTable columns={studentColumns} data={students?.responseData ?? []} />}
+      {isLoading ? <span>Loading</span> : <DataTable columns={column} data={students?.responseData ?? []} />}
+
+      <Dialog open={!!studentToView} onOpenChange={open => !open && setStudentToView(null)}>
+        {studentToView && <span>tes</span>}
+      </Dialog>
+
+      <Dialog open={!!studentToUpdate} onOpenChange={open => !open && setStudentToUpdate(null)}>
+        {studentToUpdate && <span>tes</span>}
+      </Dialog>
+
       <DataTablePagination
         rangeStart={rangeStart}
         rangeEnd={rangeEnd}

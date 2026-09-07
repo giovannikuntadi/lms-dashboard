@@ -10,14 +10,17 @@ import type { Mentor } from '@/types/mentor';
 import { Dialog } from '@/components/Dialog';
 import { MentorDetail } from './components/MentorDetail';
 import { MentorSkeleton } from './components/MentorSkeleton';
+import { tableParam } from '@/constants/table/defaultParam';
 
 export function Mentors() {
   // const [open, setOpen] = useState(false);
+  const [limit] = useState(tableParam.DEFAULT_LIMIT);
+  const [offset] = useState(tableParam.DEFAULT_OFFSET);
   const [mentorToView, setMentorToView] = useState<Mentor | null>(null);
 
   const { data: mentors, isLoading } = useQuery({
     queryKey: ['mentors'],
-    queryFn: () => HttpService.listMentors(),
+    queryFn: () => HttpService.listMentors({ limit: limit, offset: offset }),
   });
 
   const handleClickCreateMentor = useCallback(() => {

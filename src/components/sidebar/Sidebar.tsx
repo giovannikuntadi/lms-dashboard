@@ -5,7 +5,7 @@ import { SidebarItem } from './SidebarItem';
 import iconSidebarCollapsible from '@/assets/images/icon-sidebar-collapsible.svg';
 
 const NAV_ITEMS = [
-  { to: '/students', icon: Icon.SidebarStudents, label: 'Students' },
+  { to: '/students/enrolled', matchPrefix: '/students', icon: Icon.SidebarStudents, label: 'Students' },
   { to: '/courses', icon: Icon.SidebarCourses, label: 'Courses' },
   { to: '/schedule', icon: Icon.SidebarSchedule, label: 'Schedule' },
   { to: '/live-sessions', icon: Icon.SidebarLiveSessions, label: 'Live Sessions' },
@@ -42,7 +42,7 @@ export function Sidebar() {
         {open && <div className="text-text-secondary flex-1 p-2 text-xs font-medium">MAIN MENU</div>}
 
         {NAV_ITEMS.map(item => (
-          <SidebarItem key={item.label} to={item.to} icon={item.icon} label={item.label} isCollapse={!open} />
+          <SidebarItem key={item.label} to={item.to ?? '#'} icon={item.icon} label={item.label} isCollapse={!open} />
         ))}
       </nav>
     </Collapsible.Root>
