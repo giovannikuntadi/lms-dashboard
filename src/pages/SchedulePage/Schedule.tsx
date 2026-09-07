@@ -13,7 +13,7 @@ export function Schedule() {
 
   const { data: organizations } = useQuery({
     queryKey: ['organizations'],
-    queryFn: () => HttpService.listOrganizations({}),
+    queryFn: () => HttpService.listOrganizations({ limit: 100, offset: 0 }),
   });
 
   const organizationOptions = useMemo(() => {
